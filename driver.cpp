@@ -1,147 +1,186 @@
-//Name: Sebastian Reel
-//Date Due: 3/28/2021
-//Project: Sorting Algorithms
+// Name: Sebastian Reel
+// Date Due: 3/28/2021
+// Project: Sorting Algorithms
 
-#include <iostream>     // this is a comment
+// Redone project new due date May 5th, 2021
+// git push to homework 4 - reallyseb for UNR Teaching
+// after done, import to own repository for own use
+
+#include <iostream>
+#include <fstream>
 #include <random>
 #include <chrono>
-#include <ctime>
+#include "bubble.h"
+#include "selection.h"
+#include "merge.h"
+using namespace std;\
 
-#include "arraylist.h"
-#include "sort.h"
+void randomGen1k(int array[]);
+void randomGen10k(int array[]);
+void randomGen100k(int array[]);
+void presetGen1k(int array[]);
+void presetGen10k(int array[]);
+void presetGen100k(int array[]);
 
-using namespace std;
-
-//prototypes
-void insertion(int , int);
-void mergeS(int, int, int);
-void bubble(int, int, int);
-int random(int, int);
-long long min(int, long long);
-long long max(int, long long);
-long long average(int, long long);
-
-//main
 int main(){
-    srand(time(0));     // starts randomly generating numbers at time 0, need for later
-    
-    // data structure calls
-    ArrayList<long long> OneTArray;
-    ArrayList<long long> TenTArray;
-    ArrayList<long long> HunTArray;
+    Bubble bubbleR;
+    Bubble bubbleP;
+    Selection selectionR;
+    Selection selectionP;
+    Merge mergeR;
+    Merge mergeP;
 
-    for(int i = 0; i < 1000; i++){
-        OneTArray.insert(i, random(0, 106));        // looping 1000 times for random numbers
+    int choice, CPU_time;
+    int x = 1;
+    int array1k[1000], array10k[10000], array100k[100000];
+    srand(time(0));
+
+    while(choice != 0){
+        cout << "SORT (BUBBLE, SELECTION, AND MERGE)" << endl;
+        cout << "1. Run 1000 Times" << endl;
+        cout << "2. Run 10000 Times" << endl;
+        cout << "3. Run 100000 Times" << endl;
+        cin >> choice;
+        
+        switch(choice){
+            case 1:
+                while(x != 10){
+                    presetGen1k(array1k);
+                    bubbleP.sort(array1k, 1000);
+
+                    cout << "Run: " << x << " " << endl;
+                    bubbleR.printRun();
+                    x++;
+                }
+            break;
+            case 2:
+                while(x != 10){
+                    presetGen10k(array10k);
+                    bubbleP.sort(array10k, 10000);
+
+                    cout << "Run: " << x << " " << endl;
+                    bubbleR.printRun();
+                    x++;
+                }
+            break;
+            case 3:
+                while(x != 10){
+                    presetGen100k(array100k);
+                    bubbleP.sort(array100k, 100000);
+
+                    cout << "Run: " << x << " " << endl;
+                    bubbleR.printRun();
+                    x++;
+                }
+            break;
+            case 0:
+            break;
+        }
     }
-
-    for(int i = 0; i < 10000; i++){
-        TenTArray.insert(i, random(0, 106));        // looping 10000 times for random numbers
-    }
-
-    for(int i = 0; i < 100000; i++){
-        HunTArray.insert(i, random(0, 106));        // looping 100000 times for random numbers
-    }
-
-    /*insertion(OneTArray, 1000);
-    mergeS(OneTArray, 0, 1000);         // this is supposed to run the 1000 iteration
-    bubble(OneTArray, 0, 1000);
-
-    insertion(TenTArray, 10000);
-    mergeS(TenTArray, 0, 10000);        // this is supposed to run the 10000 iteration
-    bubble(TenTArray, 0, 10000);
-
-    insertion(HunTArray, 100000);
-    mergeS(HunTArray, 0, 100000);       // this is supposed to run the 100000 iteration
-    bubble(HunTArray, 0, 100000);
-    */
-   
     return 0;
 }
 
-//definiitions
-template<class ItemType>
-void insertion(int Array[], int x){
-    long long time;
+void randomGen1k(int array[]){
+    int x;
+    int n = 1000;
+    ofstream fp("1k_randomfile.txt");
 
-    for(int i; i < 10; i++){
-        auto start = chrono::high_resolution_clock::now();
-        
-        Sort<ItemType> theSort;
-        theSort.insertionSort(Array, x);
-
-        auto stop = chrono::high_resolution_clock::now();
-        auto duration = chrono::duration_cast<chrono::milliseconds> (stop - start);
-
-        theSort.insertionSort(Array, x).max(100000, x);
-        duration.count() = time;
-        time.max(100000, 0);
-    }
-}
-
-template<class ItemType>
-void mergeS(int Array[], int first, int last){
-    int time;
-
-    for(int i; i < 10; i++){
-        auto start = chrono::high_resolution_clock::now();
-
-        Sort<ItemType> theSort;
-        theSort.mergeSort(Array, first, last);
-
-        auto stop = chrono::high_resolution_clock::now();
-        auto duration = chrono::duration_cast<chrono::milliseconds> (stop - start);
-
-        duration.count() = time;
-        time.max(100000, 0);
-    }
-}
-
-template<class ItemType>
-void bubble(int Array[], int first, int last){
-    for(int i; i < 10; i++){
-        auto start = chrono::high_resolution_clock::now();
-
-        Sort<ItemType> theSort;
-        theSort.bubbleSort(Array, first, last);
-
-        auto stop = chrono::high_resolution_clock::now();
-        auto duration = chrono::duration_cast<chrono::milliseconds> (stop - start);
-
-        duration.count() = time;
-        time.max(100000, 0);
-    }
-}
-
-int random(int low, int high){
-    int random;
-    random = low + rand()%high;
+    if(fp.is_open()){
+        for(int i = 0; i < n; i++){
+            x = rand() % 106;
+            fp << x << endl;
+            array[i] = x;
+        }
     
-    return random;
-}
-
-long long min(int Array[], long long size){
-    int max_boy = 0;
-
-    for(int i = 0; i < size; i++){
-        if(Array[i] > max_boy){
-            max_boy = Array[i];
-        }
+        fp.close();
+    } else {
+        cout << "Can't open." << endl;
+        exit(0);
     }
-    return max_boy;
 }
 
-long long max(int Array[], long long size){
-    int min_boy = 107;
+void randomGen10k(int array[]){
+    int x;
+    int n = 10000;
+    ofstream fp("10k_randomfile.txt");
 
-    for(int i = 0; i < size; i++){
-        if(Array[i] < min_boy){
-            min_boy = Array[i];
+     if(fp.is_open()){
+        for(int i = 0; i < n; i++){
+            x = rand() % 106;
+            fp << x << endl;
+            array[i] = x;
         }
+    
+        fp.close();
+    } else {
+        cout << "Can't open." << endl;
+        exit(0);
     }
-    return min_boy;
 }
 
-/*long long average(int Array[], long long size){
-    //idk
-} 
-*/  
+void randomGen100k(int array[]){
+    int x;
+    int n = 100000;
+    ofstream fp("100k_randomfile.txt");
+
+     if(fp.is_open()){
+        for(int i = 0; i < n; i++){
+            x = rand() % 106;
+            fp << x << endl;
+            array[i] = x;
+        }
+    
+        fp.close();
+    } else {
+        cout << "Can't open." << endl;
+        exit(0);
+    }
+}
+
+void presetGen1k(int array[]){
+    int n = 1000;
+    ifstream fp("1k_presetfile.txt");
+
+    if(fp.is_open()){
+        for(int i = 0; i < n; i++){
+            fp >> array[i];
+        }
+
+        fp.close();
+    } else {
+        cout << "Can't open." << endl;
+        exit(0);
+    }
+}
+
+void presetGen10k(int array[]){
+    int n = 10000;
+    ifstream fp("10k_presetfile.txt");
+
+    if(fp.is_open()){
+        for(int i = 0; i < n; i++){
+            fp >> array[i];
+        }
+
+        fp.close();
+    } else {
+        cout << "Can't open." << endl;
+        exit(0);
+    }
+}\
+
+void presetGen100k(int array[]){
+int n = 100000;
+    ifstream fp("100k_presetfile.txt");
+
+    if(fp.is_open()){
+        for(int i = 0; i < n; i++){
+            fp >> array[i];
+        }
+
+        fp.close();
+    } else {
+        cout << "Can't open." << endl;
+        exit(0);
+    }
+}
